@@ -10,6 +10,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  statuses: write
 
 concurrency:
   group: github-pages
@@ -54,7 +55,35 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: 部署 Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  report:
+    name: 记录部署结果
+    if: always()
+    needs:
+      - build
+      - deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 写入提交状态
+        uses: actions/github-script@v8
+        env:
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+        with:
+          script: |
+            const success = process.env.DEPLOY_RESULT === 'success'
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: success ? 'success' : 'failure',
+              context: 'GitHub Pages',
+              description: success ? 'GitHub Pages 部署成功' : 'GitHub Pages 部署失败',
+              target_url: process.env.PAGE_URL || `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions`,
+            })
