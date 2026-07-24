@@ -29,4 +29,15 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: 类型与生产构建检查
-        run: pnpm build
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm build 2>&1 | tee build.log
+
+      - name: 上传构建日志
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mrr2-build-log
+          path: build.log
+          if-no-files-found: ignore
