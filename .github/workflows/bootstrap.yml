@@ -3,7 +3,7 @@ name: 展开原型源码
 on:
   push:
     paths:
-      - prototype.bundle.tar.gz.b64
+      - prototype.bundle.complete
 
 permissions:
   contents: write
@@ -17,9 +17,10 @@ jobs:
       - name: 展开原型源码
         shell: bash
         run: |
-          base64 --decode prototype.bundle.tar.gz.b64 > /tmp/mrr2-prototype.tar.gz
+          cat prototype.bundle.part-* | base64 --decode > /tmp/mrr2-prototype.tar.gz
+          echo "bd84d90dd55933bc81d42cb6d93d27a7aaaf6cdf1f3b452f0f4698f9aed172fe  /tmp/mrr2-prototype.tar.gz" | sha256sum --check
           tar -xzf /tmp/mrr2-prototype.tar.gz
-          rm -f prototype.bundle.tar.gz.b64 .github/workflows/bootstrap.yml
+          rm -f prototype.bundle.part-* prototype.bundle.complete .github/workflows/bootstrap.yml
       - name: 提交完整原型
         shell: bash
         run: |
