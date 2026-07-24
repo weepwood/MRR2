@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - DEPLOYMENT_STATUS.md
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
-  statuses: write
 
 concurrency:
   group: github-pages
@@ -70,20 +71,39 @@ jobs:
       - deploy
     runs-on: ubuntu-latest
     steps:
-      - name: 写入提交状态
-        uses: actions/github-script@v8
+      - name: 检出主分支
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: 写入部署结果
         env:
+          BUILD_RESULT: ${{ needs.build.result }}
           DEPLOY_RESULT: ${{ needs.deploy.result }}
           PAGE_URL: ${{ needs.deploy.outputs.page_url }}
-        with:
-          script: |
-            const success = process.env.DEPLOY_RESULT === 'success'
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: context.sha,
-              state: success ? 'success' : 'failure',
-              context: 'GitHub Pages',
-              description: success ? 'GitHub Pages 部署成功' : 'GitHub Pages 部署失败',
-              target_url: process.env.PAGE_URL || `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions`,
-            })
+        shell: bash
+        run: |
+          if [[ "$DEPLOY_RESULT" == "success" ]]; then
+            STATUS="成功"
+          else
+            STATUS="失败"
+          fi
+
+          cat > DEPLOYMENT_STATUS.md <<EOF
+          # GitHub Pages 部署状态
+
+          - 状态：${STATUS}
+          - 构建结果：${BUILD_RESULT}
+          - 部署结果：${DEPLOY_RESULT}
+          - 页面地址：${PAGE_URL:-https://weepwood.github.io/MRR2/}
+          - 工作流提交：${GITHUB_SHA}
+          - 更新时间：$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add DEPLOYMENT_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m "记录 GitHub Pages 部署状态 [skip ci]"
+            git push
+          fi
