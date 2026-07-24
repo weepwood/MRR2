@@ -1,0 +1,63 @@
+:root {
+  color-scheme: light;
+  --font-sans: Inter, "SF Pro Display", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --sidebar-bg: #0b0d12;
+  --sidebar-surface: #11141b;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-text: #f4f4f5;
+  --sidebar-muted: #8f96a3;
+  --page-bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-soft: #f9fafb;
+  --surface-hover: #f3f4f6;
+  --text: #16181d;
+  --text-secondary: #5d6470;
+  --text-tertiary: #8b919d;
+  --border: #e4e7eb;
+  --border-strong: #d4d8de;
+  --accent: #5b6cff;
+  --accent-strong: #4554e8;
+  --accent-soft: rgba(91, 108, 255, 0.10);
+  --success: #15835f;
+  --success-soft: #e9f7f1;
+  --warning: #a76516;
+  --warning-soft: #fff4e3;
+  --danger: #c44242;
+  --danger-soft: #fff0f0;
+  --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.04);
+  --shadow-md: 0 12px 30px rgba(17, 24, 39, 0.08);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --sidebar-width: 248px;
+  --topbar-height: 64px;
+  --content-max: 1500px;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --page-bg: #0d0f14;
+  --surface: #13161c;
+  --surface-soft: #171a21;
+  --surface-hover: #1b1f27;
+  --text: #f3f4f6;
+  --text-secondary: #a3a9b4;
+  --text-tertiary: #777e8b;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.13);
+  --accent-soft: rgba(91, 108, 255, 0.16);
+  --success-soft: rgba(21, 131, 95, 0.18);
+  --warning-soft: rgba(167, 101, 22, 0.18);
+  --danger-soft: rgba(196, 66, 66, 0.18);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 18px 50px rgba(0, 0, 0, 0.30);
+}
