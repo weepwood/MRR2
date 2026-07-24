@@ -22,10 +22,19 @@ jobs:
       - name: 展开原型源码
         shell: bash
         run: |
-          cat prototype.bundle.part-* | base64 --decode > /tmp/mrr2-prototype.tar.gz
+          cat \
+            prototype.bundle.part-00 \
+            prototype.bundle.part-01 \
+            prototype.bundle.part-02 \
+            prototype.bundle.part-03 \
+            prototype.bundle.tail-05 \
+            prototype.bundle.tail-06 \
+            prototype.bundle.tail-07 \
+            prototype.bundle.tail-08 \
+            | base64 --decode > /tmp/mrr2-prototype.tar.gz
           echo "bd84d90dd55933bc81d42cb6d93d27a7aaaf6cdf1f3b452f0f4698f9aed172fe  /tmp/mrr2-prototype.tar.gz" | sha256sum --check
           tar -xzf /tmp/mrr2-prototype.tar.gz
-          rm -f prototype.bundle.part-* prototype.bundle.complete
+          rm -f prototype.bundle.part-* prototype.bundle.tail-* prototype.bundle.complete
           rm -f .github/workflows/ci.yml
 
       - name: 安装 pnpm
