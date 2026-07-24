@@ -4,6 +4,11 @@ MRR2 是以 [MRR](https://github.com/weepwood/MRR) 业务结构为基础制作�
 
 > 本仓库仅包含前端原型和 Mock 数据，不连接 MRR 后端，不读取数据库，也不访问真实病案影像。
 
+## 在线预览
+
+- GitHub Pages：<https://weepwood.github.io/MRR2/>
+- 每次推送到 `main` 后，GitHub Actions 会自动完成类型检查、生产构建和 Pages 发布。
+
 ## 设计方向
 
 项目采用“Vercel 的结构秩序 + Linear 的深色质感”：
