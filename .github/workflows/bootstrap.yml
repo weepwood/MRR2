@@ -1,4 +1,4 @@
-name: 展开原型源码
+name: 展开并验证原型源码
 
 on:
   push:
@@ -9,18 +9,37 @@ permissions:
   contents: write
 
 jobs:
-  extract:
+  extract-build-commit:
     runs-on: ubuntu-latest
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
+
       - name: 展开原型源码
         shell: bash
         run: |
           cat prototype.bundle.part-* | base64 --decode > /tmp/mrr2-prototype.tar.gz
           echo "bd84d90dd55933bc81d42cb6d93d27a7aaaf6cdf1f3b452f0f4698f9aed172fe  /tmp/mrr2-prototype.tar.gz" | sha256sum --check
           tar -xzf /tmp/mrr2-prototype.tar.gz
-          rm -f prototype.bundle.part-* prototype.bundle.complete .github/workflows/bootstrap.yml
+          rm -f prototype.bundle.part-* prototype.bundle.complete
+          rm -f .github/workflows/bootstrap.yml .github/workflows/ci.yml
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - name: 配置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 安装依赖
+        run: pnpm install --no-frozen-lockfile
+
+      - name: 类型与生产构建检查
+        run: pnpm build
+
       - name: 提交完整原型
         shell: bash
         run: |
